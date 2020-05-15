@@ -1,8 +1,6 @@
 from django.db import models
 import datetime
 
-from weapons.models import Weapon
-
 
 class Operator(models.Model):
 
@@ -15,6 +13,10 @@ class Operator(models.Model):
         SLOW = '1', 'Slow'
         NORMAL = '2', 'Normal'
         FAST = '3', 'Fast'
+
+    class Position(models.TextChoices):
+        DEFENDER = 'DEF', 'Defender'
+        ATTACKER = 'ATT', 'Attacker'
 
     name = models.CharField(
         max_length=100,
@@ -40,17 +42,13 @@ class Operator(models.Model):
     )
     organizations = models.ManyToManyField(
         'Organization',
-        on_delete=models.PROTECT,
         related_name='operators',
         verbose_name='Organizations',
     )
-    is_attacker = models.BooleanField(
-        default=False,
-        verbose_name='Is attacker',
-    )
-    is_defender = models.BooleanField(
-        default=False,
-        verbose_name='Is attacker',
+    position = models.CharField(
+        max_length=3,
+        choices=Position.choices,
+        default=Position.DEFENDER
     )
     birthplace = models.CharField(
         null=True,
@@ -62,7 +60,7 @@ class Operator(models.Model):
         null=True,
         blank=True,
         verbose_name='Date of birth',
-        default=datetime.date.today(),
+        default=datetime.date.today,
     )
     height = models.FloatField(
         null=True,
@@ -120,39 +118,7 @@ class Organization(models.Model):
         verbose_name_plural = 'Organizations'
 
 
-class Loadout(models.Model):
-    operator = models.OneToOneField(
-        Operator,
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        verbose_name='Operator',
-    )
-    description = models.TextField(
-        verbose_name='Description',
-    )
-    primary_weapons = models.ManyToManyField(
-        Weapon,
-        related_name='loadout_as_primary',
-        verbose_name='Primary weapons',
-    )
-    secondary_weapons = models.ManyToManyField(
-        Weapon,
-        related_name='loadout_as_secondary',
-        verbose_name='Secondary weapons',
-    )
-    gadgets = models.ManyToManyField(
-        Weapon,
-        related_name='loadout_as_gadgets',
-        verbose_name='Gadgets',
-    )
 
-    def __str__(self):
-        return f'{self.operator.name}(loadout)'
-
-    class Meta:
-        verbose_name = 'Loadout'
-        verbose_name_plural = 'Loadouts'
 
 
 
