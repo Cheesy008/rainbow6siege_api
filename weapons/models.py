@@ -55,7 +55,7 @@ class AbstractWeapon(models.Model):
 class Weapon(AbstractWeapon):
     users = models.ManyToManyField(
         Operator,
-        verbose_name='Operators',
+        verbose_name='Users',
         related_name='weapons',
     )
     fire_modes = models.TextField(
@@ -113,7 +113,7 @@ class Weapon(AbstractWeapon):
 class Gadget(AbstractWeapon):
     users = models.ManyToManyField(
         Operator,
-        verbose_name='Operators',
+        verbose_name='Users',
         related_name='gadgets',
     )
 
@@ -139,7 +139,7 @@ class Attachments(models.Model):
     )
 
     def __str__(self):
-        return f'{self.type} - {self.name}'
+        return f'{self.get_type_display()} - {self.name}'
 
     class Meta:
         verbose_name = 'Attachment'
@@ -153,9 +153,6 @@ class Loadout(models.Model):
         null=True,
         blank=True,
         verbose_name='Operator',
-    )
-    description = models.TextField(
-        verbose_name='Description',
     )
     primary_weapons = models.ManyToManyField(
         Weapon,
