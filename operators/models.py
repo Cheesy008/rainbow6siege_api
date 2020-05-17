@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import models
+from django.conf import settings
 
 
 class Operator(models.Model):
@@ -49,13 +50,14 @@ class Operator(models.Model):
         max_length=200,
         verbose_name='Birthplace',
     )
-    date_of_birth = models.DateField(
+    date_of_birth = models.CharField(
         null=True,
         blank=True,
+        max_length=200,
         verbose_name='Date of birth',
-        default=datetime.date.today,
     )
-    age = models.PositiveSmallIntegerField(
+    age = models.CharField(
+        max_length=100,
         null=True,
         blank=True,
         verbose_name='Age',

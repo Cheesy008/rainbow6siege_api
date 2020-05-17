@@ -1,4 +1,5 @@
 import requests
+import datetime
 from bs4 import BeautifulSoup
 
 from django.core.management.base import BaseCommand
@@ -32,15 +33,23 @@ class Operators:
         param = aside.find('div', attrs={'data-source': source}).find('div').text
         return param.strip()
 
+    def get_stats(self):
+        soup = BeautifulSoup(self.get_html(), 'lxml')
+        aside = soup.find('aside', class_='portable-infobox pi-background pi-europa pi-theme-wikia pi-layout-default')
+        armor = aside.find('section').find('tbody').find('tr').find_all('td')[0].find('small').text.strip()
+        speed = aside.find('section').find('tbody').find('tr').find_all('td')[1].find('small').text.strip()
+        return armor, speed
+
     def get_data(self):
         real_name = self.get_param('realname')
         organizations = self.get_param('organization')
         position = self.get_param('position')
         birthplace = self.get_param('birthplace')
-        # date_of_birth = self.get_param('dob')
+        date_of_birth = self.get_param('dob')
         age = self.get_param('age')
         weight = self.get_param('weight')
         height = self.get_param('height')
+        armor, speed = self.get_stats()
         op = Operator.objects.create(
             name=self.name,
             real_name=real_name,
@@ -49,12 +58,15 @@ class Operators:
             age=age,
             weight=weight,
             height=height,
+            date_of_birth=date_of_birth,
+            armor_rating=armor,
+            speed_rating=speed,
         )
         try:
             org = Organization.objects.get(name__iexact=organizations)
             org.operators.add(op)
         except:
-            print('error')
+            print(f'error - {op}')
 
     def run(self):
         self.get_data()
