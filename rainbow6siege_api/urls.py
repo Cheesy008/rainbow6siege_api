@@ -16,11 +16,15 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('api/', include('api.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/profile/', include('rest_auth.urls')),
+    path('api/profile/registration/', include('rest_auth.registration.urls')),
+    path('api/profile/login/', include('rest_auth.registration.urls')),
 ]
 
 if settings.DEBUG:

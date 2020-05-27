@@ -40,9 +40,17 @@ class Operators:
         speed = aside.find('section').find('tbody').find('tr').find_all('td')[1].find('small').text.strip()
         return armor, speed
 
+    def get_unique_ability(self):
+        soup = BeautifulSoup(self.get_html(), 'lxml')
+        ability = soup.find('table', class_='article-table') \
+            .find_all('tr')[4] \
+            .find_all('td')[1] \
+            .find('span').text
+        return ability
+
     def get_data(self):
         real_name = self.get_param('realname')
-        organizations = self.get_param('organization')
+        organizations = self.get_param('organization').split('Rainbow')[-1].strip()
         position = self.get_param('position')
         birthplace = self.get_param('birthplace')
         date_of_birth = self.get_param('dob')
@@ -50,6 +58,7 @@ class Operators:
         weight = self.get_param('weight')
         height = self.get_param('height')
         armor, speed = self.get_stats()
+        unique_ability = self.get_unique_ability()
         op = Operator.objects.create(
             name=self.name,
             real_name=real_name,
@@ -61,6 +70,7 @@ class Operators:
             date_of_birth=date_of_birth,
             armor_rating=armor,
             speed_rating=speed,
+            unique_ability=unique_ability,
         )
         try:
             org = Organization.objects.get(name__iexact=organizations)
