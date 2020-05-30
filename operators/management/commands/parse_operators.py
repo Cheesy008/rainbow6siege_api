@@ -1,5 +1,5 @@
 import requests
-import datetime
+import logging.config
 from bs4 import BeautifulSoup
 
 from django.core.management.base import BaseCommand
@@ -8,6 +8,11 @@ from operators.models import (
     Operator,
     Organization,
 )
+from .logging_config import logger_config
+
+
+logging.config.dictConfig(logger_config)
+logger = logging.getLogger('operators_logger')
 
 
 class Operators:
@@ -76,7 +81,7 @@ class Operators:
             org = Organization.objects.get(name__iexact=organizations)
             org.operators.add(op)
         except:
-            print(f'error - {op}')
+            logger.error(f'Error - {op}', exc_info=True)
 
     def run(self):
         self.get_data()
