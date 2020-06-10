@@ -29,13 +29,19 @@ class Operators:
 
     def get_param(self, source):
         soup = BeautifulSoup(self.get_html(), 'lxml')
-        aside = soup.find('aside', class_='portable-infobox pi-background pi-europa pi-theme-wikia pi-layout-default')
+        aside = soup.find(
+            'aside',
+            class_='portable-infobox pi-background pi-europa pi-theme-wikia pi-layout-default'
+        )
         param = aside.find('div', attrs={'data-source': source}).find('div').text
         return param.strip()
 
     def get_stats(self):
         soup = BeautifulSoup(self.get_html(), 'lxml')
-        aside = soup.find('aside', class_='portable-infobox pi-background pi-europa pi-theme-wikia pi-layout-default')
+        aside = soup.find(
+            'aside',
+            class_='portable-infobox pi-background pi-europa pi-theme-wikia pi-layout-default'
+        )
         armor = aside.find('section').find('tbody').find('tr').find_all('td')[0].find('small').text.strip()
         speed = aside.find('section').find('tbody').find('tr').find_all('td')[1].find('small').text.strip()
         return armor, speed
@@ -75,7 +81,7 @@ class Operators:
         try:
             org = Organization.objects.get(name__iexact=organizations)
             org.operators.add(op)
-        except:
+        except Organization.DoesNotExist:
             print(f'error - {op}')
 
     def run(self):

@@ -9,18 +9,20 @@ from operators.models import (
 class AbstractWeapon(models.Model):
 
     class WeaponTypes(models.TextChoices):
-        ASSAULT_RIFLE = 'AS', 'Assault Rifle'
-        SHOTGUN = 'SH', 'Shotgun'
-        MACHINE_PISTOL = 'MA', 'Machine Pistol'
-        GADGET = 'GA', 'Gadget'
-        SUBMACHINE_GUN = 'SU', 'Submachine gun'
+        ASSAULT_RIFLE = 'Assault Rifle'
+        MARKSMAN_RIFLE = 'Marksman Rifle'
+        SHOTGUN = 'Shotgun'
+        MACHINE_PISTOL = 'Machine Pistol'
+        GADGET = 'Gadget'
+        SUBMACHINE_GUN = 'Submachine gun'
+        HANDGUN = 'Handgun'
 
     name = models.CharField(
         max_length=150,
         verbose_name='Name',
     )
     type = models.CharField(
-        max_length=2,
+        max_length=100,
         choices=WeaponTypes.choices,
         default=WeaponTypes.ASSAULT_RIFLE,
         verbose_name='Type',
@@ -28,11 +30,6 @@ class AbstractWeapon(models.Model):
     users = models.ManyToManyField(
         Operator,
         verbose_name='Operators',
-    )
-    max_ammunition = models.CharField(
-        max_length=200,
-        default='1',
-        verbose_name='Maximum ammunition',
     )
     affiliation = models.ForeignKey(
         Organization,
@@ -58,28 +55,30 @@ class Weapon(AbstractWeapon):
         verbose_name='Users',
         related_name='weapons',
     )
-    fire_modes = models.TextField(
-        verbose_name='Fire modes',
-    )
     standard_damage = models.CharField(
         max_length=200,
         verbose_name='Standard damage',
+        null=True,
     )
     suppressed_damage = models.CharField(
         max_length=200,
         verbose_name='Standard damage',
+        null=True,
     )
     rate_of_fire = models.CharField(
         max_length=200,
         verbose_name='Rate of fire',
+        null=True,
     )
     magazine_size = models.CharField(
         max_length=100,
         verbose_name='Magazine size',
+        null=True,
     )
     ammunition_type = models.CharField(
         max_length=100,
         verbose_name='Ammunition type',
+        null=True,
     )
     sights = models.ManyToManyField(
         'Attachments',
