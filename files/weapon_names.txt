@@ -1,0 +1,101 @@
+1911 TACOPS
+416-C Carbine
+417
+552 Commando/Siege
+556xi
+6P41
+92FS/Siege
+9mm C1
+9×19VSN
+ACS12
+AK-12
+AK-47/Siege
+AK-74/Siege
+ALDA 5.56
+AR-15.50
+AR33
+ARX200
+AUG Para/Siege
+AUG/Siege
+Bailiff 410
+Ballistic Shield
+Bearing 9
+BOSG.12.2
+C75 Auto
+C7E
+C8-SFW
+CAMRS
+Commando 9
+CSRX 300
+Desert Eagle/Siege
+F90
+FAMAS/Siege
+Five-seven/Siege
+FMG-9
+FO-12
+G36/Siege
+GSh-18
+HK21/Siege
+ITA12L
+ITA12S
+K1A/Siege
+Keratos .357
+L85/Siege
+LFP586
+LMG-E
+M1014/Siege
+M12/Siege
+M14/Siege
+M249/Siege
+M3/Siege
+M4/Siege
+M45 MEUSOC/Siege
+M500/Siege
+M762
+M870/Siege
+MAC-11/Siege
+Mk1 9mm
+MP5/Siege
+MP5K/Siege
+MP5SD/Siege
+MP7/Siege
+MP9/Siege
+MPX
+Mx4 Storm
+OTs-03
+P-10C
+P10 RONI
+P12
+P226/Siege
+P229
+P9
+P90/Siege
+PARA-308
+PDW9
+PMM
+PP-19 Bizon/Siege
+Q-929
+R4-C
+RG15
+RPG-7/Siege
+SASG-12/Siege
+SCAR-H CQC/Siege
+Scorpion EVO 3 A1
+SDP 9mm
+SG-CQB
+SIX12
+SMG-12
+SPAS-12/Siege
+SPAS-15/Siege
+Spear .308
+SR-25/Siege
+Super Shorty
+SuperNova
+T-5 SMG
+T-95 LSW
+TCSG12
+Type 89-F/Siege
+UMP/Siege
+USP/Siege
+V308
+Vector .45 ACP

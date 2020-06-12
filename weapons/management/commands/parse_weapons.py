@@ -1,5 +1,8 @@
+import os
+
 import requests
 from bs4 import BeautifulSoup
+from django.conf import settings
 
 from django.core.management.base import BaseCommand
 
@@ -101,36 +104,49 @@ class Weapons:
             'div',
             attrs={'data-source': 'magazine'}
         ).find('div').text.strip()
-        weapon_ammotype = stats_section.find(
-            'div',
-            attrs={'data-source': 'ammotype'}
-        ).find('div').text.strip()
-
         data = {
             'weapon_standard_damage': weapon_standard_damage,
             'weapon_suppressed_damage': weapon_suppressed_damage,
             'weapon_mobility': weapon_mobility,
             'weapon_magazine': weapon_magazine,
-            'weapon_ammotype': weapon_ammotype,
             'weapon_rate_of_fire': weapon_rate_of_fire,
         }
+        try:
+            weapon_ammotype = stats_section.find(
+                'div',
+                attrs={'data-source': 'ammotype'}
+            ).find('div').text.strip()
+        except:
+            pass
+        else:
+            data['weapon_ammotype'] = weapon_ammotype
 
         return data
 
     def get_attachments(self, soup):
         div = soup.find('div', class_='mw-content-text')
         table = div.find('table', class_='article-table')
-        sights = table.find_all('tr')[0].find('ul')
-        barrels = table.find_all('tr')[1].find('ul')
-        grips = table.find_all('tr')[2].find('ul')
-        under_barrels = table.find_all('tr')[3].find('ul')
-
-        data = {
-            'sights': sights,
-            'barrels': barrels,
-            'grips': grips,
-            'under_barrels': under_barrels,
-        }
+        data = {}
+        try:
+            sights = table.find_all('tr')[0].find('ul')
+            data['sights'] = sights
+        except:
+            pass
+        try:
+            barrels = table.find_all('tr')[1].find('ul')
+            data['barrels'] = barrels
+        except:
+            pass
+        try:
+            grips = table.find_all('tr')[2].find('ul')
+            data['grips'] = grips
+        except:
+            pass
+        try:
+            under_barrels = table.find_all('tr')[3].find('ul')
+            data['under_barrels'] = under_barrels
+        except:
+            pass
 
         return data
 
@@ -169,7 +185,7 @@ class Weapons:
                 affiliation=affiliation,
                 standard_damage=stats['weapon_standard_damage'],
                 suppressed_damage=stats['weapon_suppressed_damage'],
-                ammunition_type=stats['weapon_ammotype'],
+                ammunition_type=stats.get('weapon_ammotype', 'Undefined'),
                 magazine_size=stats['weapon_magazine'],
                 rate_of_fire=stats['weapon_rate_of_fire'],
                 mobility=int(stats['weapon_mobility'])
@@ -179,10 +195,22 @@ class Weapons:
                 op = Operator.objects.get(name__iexact=user.text.strip())
                 op.weapons.add(w)
 
-            self.set_attachments('sights', attachments['sights'], w)
-            self.set_attachments('barrels', attachments['barrels'], w)
-            self.set_attachments('grips', attachments['grips'], w)
-            self.set_attachments('under_barrels', attachments['under_barrels'], w)
+            try:
+                self.set_attachments('sights', attachments['sights'], w)
+            except:
+                pass
+            try:
+                self.set_attachments('barrels', attachments['barrels'], w)
+            except:
+                pass
+            try:
+                self.set_attachments('grips', attachments['grips'], w)
+            except:
+                pass
+            try:
+                self.set_attachments('under_barrels', attachments['under_barrels'], w)
+            except:
+                pass
 
     def run(self):
         self.get_data()
@@ -192,9 +220,11 @@ class Command(BaseCommand):
     help = 'Weapon parsing'
 
     def handle(self, *args, **options):
-        names = ['M4/Siege', '417']
-        for name in names:
-            operators = Weapons(name)
-            operators.run()
+        path_to_file = os.path.join(settings.BASE_DIR, 'files', 'weapon_names.txt')
+        with open(path_to_file, 'r', encoding='utf-8') as f:
+            for name in f:
+                print(name)
+                weapons = Weapons(name.strip())
+                weapons.run()
         self.stdout.write('parsing complete')
 

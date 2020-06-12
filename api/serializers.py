@@ -5,7 +5,7 @@ from operators.models import (
     Organization,
 )
 from weapons.models import (
-    Loadout
+    Loadout, Weapon
 )
 
 
@@ -44,12 +44,14 @@ class OrganizationListSerializer(serializers.ModelSerializer):
 
 
 class OperatorListSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='operator-detail', read_only=True)
     organizations = OrganizationListSerializer(many=True, read_only=True)
 
     class Meta:
         model = Operator
         fields = (
             'id',
+            'url',
             'name',
             'position',
             'armor_rating',
@@ -67,5 +69,51 @@ class OperatorDetailSerializer(serializers.ModelSerializer):
         model = Operator
         fields = '__all__'
         read_only_fields = ('__all__',)
+
+
+class WeaponListSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='weapon-detail', read_only=True)
+    users = OperatorListSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Weapon
+        fields = (
+            'id',
+            'url',
+            'name',
+            'users',
+        )
+
+
+class WeaponDetailSerializer(serializers.ModelSerializer):
+    users = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='name'
+    )
+    sights = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='name'
+    )
+    barrels = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='name'
+    )
+    grips = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='name'
+    )
+    under_barrels = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='name'
+    )
+
+    class Meta:
+        model = Weapon
+        fields = '__all__'
 
 
