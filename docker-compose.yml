@@ -17,3 +17,27 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    volumes:
+    - .:/code
+  redis:
+    restart: always
+    command: redis-server
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  worker:
+    build: .
+    command: celery worker -A rainbow6siege_api -l debug
+    volumes:
+      - .:/code
+    depends_on:
+      - web
+      - redis
+  flower:
+    image: mher/flower
+    command: flower --broker=redis://redis/2 --port=8888
+    ports:
+      - 8888:8888
+    depends_on:
+      - web
+      - redis

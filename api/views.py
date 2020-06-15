@@ -1,5 +1,8 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.response import Response
 
 from operators.models import (
     Operator,
@@ -15,6 +18,7 @@ from .serializers import (
 )
 from .pagination import PaginationSettings
 from .filters import OperatorsFilter
+from .tasks import send_email_task
 
 
 class OperatorsViewSet(ReadOnlyModelViewSet):
@@ -35,6 +39,12 @@ class OperatorsViewSet(ReadOnlyModelViewSet):
 class OrganizationViewSet(ReadOnlyModelViewSet):
     queryset = Organization.objects.all()
     serializer_class = OrganizationListSerializer
+
+    @action(detail=True, methods=['post', 'get'], serializer_class=OperatorDetailSerializer)
+    def test_email(self, request, pk=None):
+        user_email = request.user.email
+        send_email_task.delay(user_email, 'Выполнено')
+        return Response(status=status.HTTP_200_OK)
 
 
 class WeaponViewSet(ReadOnlyModelViewSet):
